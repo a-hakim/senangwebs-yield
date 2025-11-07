@@ -7,7 +7,7 @@ module.exports = (env, argv) => {
 
   return {
     entry: {
-      'swy': './src/swy.js',
+      swy: './src/swy.js',
     },
     output: {
       filename: isDevelopment ? '[name].js' : '[name].min.js',
@@ -36,10 +36,7 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.css$/,
-          use: [
-            MiniCssExtractPlugin.loader,
-            'css-loader',
-          ],
+          use: [MiniCssExtractPlugin.loader, 'css-loader'],
         },
       ],
     },
