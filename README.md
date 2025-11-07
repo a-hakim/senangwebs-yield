@@ -9,13 +9,9 @@ A lightweight, dependency-free JavaScript library for creating beautiful data vi
 - **Declarative** - HTML-first approach with `data-swy` attributes
 - **Flexible** - JavaScript API for dynamic use cases
 - **Chart Types** - Bar Chart, Pie Chart, Line Chart
-- **Fully Responsive** - Auto-resizes to container dimensions and scales beautifully on all screen sizes
 - **Customizable** - Easy to style with CSS, no coding knowledge required
 - **Accessible** - Semantic HTML elements for better accessibility
-- **Crisp Graphics** - SVG-based rendering looks sharp on any resolution (Retina ready)
-- **Interactive** - Built-in hover effects and animations
 - **Auto-initialization** - Charts initialize automatically from HTML markup on page load
-- **Cross-browser** - Works on all modern browsers
 
 ## Installation
 
