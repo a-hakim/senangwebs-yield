@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SenangWebs Yield (SWY) - Demo</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Include the SWY library styles -->
+    <link rel="stylesheet" href="../dist/swy.min.css" />
+
+  </head>
+  <body class="font-sans min-h-screen py-10 px-5 bg-gradient-to-br from-gray-50 to-blue-50">
+    <div class="max-w-7xl mx-auto">
+      <header class="text-center mb-8">
+        <h1 class="text-4xl md:text-5xl font-bold mb-3 text-gray-900">SenangWebs Yield (SWY)</h1>
+        <p class="text-lg md:text-xl text-gray-700 mb-4">Lightweight Data Visualization Library</p>
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg inline-block text-sm md:text-base max-w-2xl mx-auto">
+          <strong class="text-blue-900">Now using HTML, CSS & SVG</strong> <span class="text-gray-700">for better versatility and responsive design instead of Canvas!</span>
+        </div>
+      </header>
+
+      <div class="bg-white rounded-xl p-8 mb-12 border border-gray-200">
+        <h3 class="text-gray-800 text-2xl font-bold mb-5">Key Features</h3>
+        <ul class="space-y-0">
+          <li class="py-3 text-gray-700 border-b border-gray-200">
+            <span class="text-blue-500 font-bold mr-3">✓</span>Fully responsive and scales beautifully on all screen sizes
+          </li>
+          <li class="py-3 text-gray-700 border-b border-gray-200">
+            <span class="text-blue-500 font-bold mr-3">✓</span>Easy to customize with CSS - no coding knowledge required
+          </li>
+          <li class="py-3 text-gray-700 border-b border-gray-200">
+            <span class="text-blue-500 font-bold mr-3">✓</span>Better accessibility - semantic HTML elements
+          </li>
+          <li class="py-3 text-gray-700 border-b border-gray-200">
+            <span class="text-blue-500 font-bold mr-3">✓</span>Zero dependencies - lightweight and fast
+          </li>
+          <li class="py-3 text-gray-700 border-b border-gray-200">
+            <span class="text-blue-500 font-bold mr-3">✓</span>SVG charts are crisp on any resolution (Retina ready)
+          </li>
+          <li class="py-3 text-gray-700 border-b border-gray-200">
+            <span class="text-blue-500 font-bold mr-3">✓</span>Dual API: HTML attributes or JavaScript methods
+          </li>
+          <li class="py-3 text-gray-700 border-b border-gray-200">
+            <span class="text-blue-500 font-bold mr-3">✓</span>Auto-initialization from HTML markup
+          </li>
+          <li class="py-3 text-gray-700">
+            <span class="text-blue-500 font-bold mr-3">✓</span>Interactive hover effects and animations
+          </li>
+        </ul>
+      </div>
+
+      <h2 class="text-gray-900 text-3xl md:text-4xl font-bold text-center my-10">HTML API Examples</h2>
+      <p class="text-center text-gray-700 mb-6">
+        Define charts directly in HTML using data attributes - no JavaScript needed!
+      </p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <!-- Bar Chart HTML API -->
+        <div class="bg-white rounded-xl p-6 border border-gray-200">
+          <h2 class="text-gray-800 text-xl md:text-2xl font-bold mb-5">Bar Chart (HTML API)</h2>
+          <div data-swy class="bg-gray-50 rounded-lg p-4 min-h-[400px] h-[450px] flex items-stretch justify-center overflow-hidden">
+            <div data-swy-type="bar-chart" data-swy-x-axis="Quarters" data-swy-y-axis="Revenue ($K)" class="w-full">
+              <div data-swy-x-label="Q1" data-swy-y-value="150" data-swy-color="#ff6600"></div>
+              <div data-swy-x-label="Q2" data-swy-y-value="200" data-swy-color="#2a22a2"></div>
+              <div data-swy-x-label="Q3" data-swy-y-value="250" data-swy-color="#33cc33"></div>
+              <div data-swy-x-label="Q4" data-swy-y-value="320" data-swy-color="#ffc107"></div>
+            </div>
+          </div>
+          <div class="bg-gray-100 border-l-4 border-indigo-500 p-4 mt-4 rounded font-mono text-xs md:text-sm overflow-x-auto">
+            &lt;div data-swy&gt;<br />
+            &nbsp;&nbsp;&lt;div data-swy-type="bar-chart"<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data-swy-x-axis="Quarters"<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data-swy-y-axis="Revenue ($K)"&gt;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;div data-swy-x-label="Q1"<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data-swy-y-value="150"<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data-swy-color="#ff6600"&gt;&lt;/div&gt;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+            &nbsp;&nbsp;&lt;/div&gt;<br />
+            &lt;/div&gt;
+          </div>
+        </div>
+
+        <!-- Pie Chart HTML API -->
+        <div class="bg-white rounded-xl p-6 border border-gray-200">
+          <h2 class="text-gray-800 text-xl md:text-2xl font-bold mb-5">Pie Chart (HTML API)</h2>
+          <div data-swy class="bg-gray-50 rounded-lg p-4 min-h-[400px] h-[450px] flex items-stretch justify-center overflow-hidden">
+            <div data-swy-type="pie-chart" data-swy-total="360" class="w-full">
+              <div data-swy-label="Web Design" data-swy-value="120" data-swy-color="#ff6600"></div>
+              <div data-swy-label="Development" data-swy-value="150" data-swy-color="#2a22a2"></div>
+              <div data-swy-label="Marketing" data-swy-value="90" data-swy-color="#33cc33"></div>
+            </div>
+          </div>
+          <div class="bg-gray-100 border-l-4 border-indigo-500 p-4 mt-4 rounded font-mono text-xs md:text-sm overflow-x-auto">
+            &lt;div data-swy&gt;<br />
+            &nbsp;&nbsp;&lt;div data-swy-type="pie-chart"<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data-swy-total="360"&gt;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;div data-swy-label="Web Design"<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data-swy-value="120"<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data-swy-color="#ff6600"&gt;&lt;/div&gt;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+            &nbsp;&nbsp;&lt;/div&gt;<br />
+            &lt;/div&gt;
+          </div>
+        </div>
+
+        <!-- Line Chart HTML API -->
+        <div class="bg-white rounded-xl p-6 border border-gray-200 lg:col-span-2">
+          <h2 class="text-gray-800 text-xl md:text-2xl font-bold mb-5">Line Chart (HTML API)</h2>
+          <div data-swy class="bg-gray-50 rounded-lg p-4 min-h-[400px] h-[450px] flex items-stretch justify-center overflow-hidden">
+            <div data-swy-type="line-chart" data-swy-x-axis="Days" data-swy-y-axis="Active Users" class="w-full">
+              <div data-swy-x-label="Mon" data-swy-y-value="50"></div>
+              <div data-swy-x-label="Tue" data-swy-y-value="80"></div>
+              <div data-swy-x-label="Wed" data-swy-y-value="65"></div>
+              <div data-swy-x-label="Thu" data-swy-y-value="90"></div>
+              <div data-swy-x-label="Fri" data-swy-y-value="120"></div>
+              <div data-swy-x-label="Sat" data-swy-y-value="95"></div>
+              <div data-swy-x-label="Sun" data-swy-y-value="70"></div>
+            </div>
+          </div>
+          <div class="bg-gray-100 border-l-4 border-indigo-500 p-4 mt-4 rounded font-mono text-xs md:text-sm overflow-x-auto">
+            &lt;div data-swy&gt;<br />
+            &nbsp;&nbsp;&lt;div data-swy-type="line-chart"<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data-swy-x-axis="Days"<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data-swy-y-axis="Active Users"&gt;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;div data-swy-x-label="Mon"<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data-swy-y-value="50"&gt;&lt;/div&gt;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+            &nbsp;&nbsp;&lt;/div&gt;<br />
+            &lt;/div&gt;
+          </div>
+        </div>
+      </div>
+
+      <h2 class="text-gray-900 text-3xl md:text-4xl font-bold text-center my-10">JavaScript API Examples</h2>
+      <p class="text-center text-gray-700 mb-6">
+        Create charts programmatically with JavaScript for dynamic data
+      </p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <!-- Bar Chart JS API -->
+        <div class="bg-white rounded-xl p-6 border border-gray-200">
+          <h2 class="text-gray-800 text-xl md:text-2xl font-bold mb-5">Bar Chart (JS API)</h2>
+          <div id="bar-chart-js" class="bg-gray-50 rounded-lg p-4 min-h-[400px] h-[450px] flex items-stretch justify-center overflow-hidden"></div>
+          <div class="bg-gray-100 border-l-4 border-indigo-500 p-4 mt-4 rounded font-mono text-xs md:text-sm overflow-x-auto">
+            &lt;div id="bar-chart-js"&gt;&lt;/div&gt;<br />
+            &lt;script&gt;<br />
+            SWY.initBarChart({<br />
+            &nbsp;&nbsp;container: '#bar-chart-js',<br />
+            &nbsp;&nbsp;xAxis: 'Months',<br />
+            &nbsp;&nbsp;yAxis: 'Revenue',<br />
+            &nbsp;&nbsp;data: [<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;{ xLabel: 'Jan', yValue: 300, color: '#ff6600' },<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;{ xLabel: 'Feb', yValue: 400 },<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+            &nbsp;&nbsp;]<br />
+            });<br />
+            &lt;/script&gt;
+          </div>
+        </div>
+
+        <!-- Pie Chart JS API -->
+        <div class="bg-white rounded-xl p-6 border border-gray-200">
+          <h2 class="text-gray-800 text-xl md:text-2xl font-bold mb-5">Pie Chart (JS API)</h2>
+          <div id="pie-chart-js" class="bg-gray-50 rounded-lg p-4 min-h-[400px] h-[450px] flex items-stretch justify-center overflow-hidden"></div>
+          <div class="bg-gray-100 border-l-4 border-indigo-500 p-4 mt-4 rounded font-mono text-xs md:text-sm overflow-x-auto">
+            &lt;div id="pie-chart-js"&gt;&lt;/div&gt;<br />
+            &lt;script&gt;<br />
+            SWY.initPieChart({<br />
+            &nbsp;&nbsp;container: '#pie-chart-js',<br />
+            &nbsp;&nbsp;total: 500,<br />
+            &nbsp;&nbsp;data: [<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;{ label: 'Service A', value: 200 },<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;{ label: 'Service B', value: 150 },<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+            &nbsp;&nbsp;]<br />
+            });<br />
+            &lt;/script&gt;
+          </div>
+        </div>
+
+        <!-- Line Chart JS API -->
+        <div class="bg-white rounded-xl p-6 border border-gray-200 lg:col-span-2">
+          <h2 class="text-gray-800 text-xl md:text-2xl font-bold mb-5">Line Chart (JS API)</h2>
+          <div id="line-chart-js" class="bg-gray-50 rounded-lg p-4 min-h-[400px] h-[450px] flex items-stretch justify-center overflow-hidden"></div>
+          <div class="bg-gray-100 border-l-4 border-indigo-500 p-4 mt-4 rounded font-mono text-xs md:text-sm overflow-x-auto">
+            &lt;div id="line-chart-js"&gt;&lt;/div&gt;<br />
+            &lt;script&gt;<br />
+            SWY.initLineChart({<br />
+            &nbsp;&nbsp;container: '#line-chart-js',<br />
+            &nbsp;&nbsp;xAxis: 'Weeks',<br />
+            &nbsp;&nbsp;yAxis: 'Sales',<br />
+            &nbsp;&nbsp;data: [<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;{ xLabel: 'Week 1', yValue: 100 },<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;{ xLabel: 'Week 2', yValue: 150 },<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;...<br />
+            &nbsp;&nbsp;]<br />
+            });<br />
+            &lt;/script&gt;
+          </div>
+        </div>
+      </div>
+
+      <h2 class="text-gray-900 text-3xl md:text-4xl font-bold text-center my-10">Advanced Examples</h2>
+      <p class="text-center text-gray-700 mb-6">
+        More complex visualizations with larger datasets
+      </p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-1 gap-8 mb-12">
+        <!-- Advanced Bar Chart -->
+        <div class="bg-white rounded-xl p-6 border border-gray-200">
+          <h2 class="text-gray-800 text-xl md:text-2xl font-bold mb-5">Monthly Performance Comparison</h2>
+          <div id="advanced-bar-chart" class="bg-gray-50 rounded-lg p-4 min-h-[400px] h-[450px] flex items-stretch justify-center overflow-hidden"></div>
+        </div>
+
+        <!-- Advanced Pie Chart -->
+        <div class="bg-white rounded-xl p-6 border border-gray-200">
+          <h2 class="text-gray-800 text-xl md:text-2xl font-bold mb-5">Market Share Distribution</h2>
+          <div id="advanced-pie-chart" class="bg-gray-50 rounded-lg p-4 min-h-[400px] h-[450px] flex items-stretch justify-center overflow-hidden"></div>
+        </div>
+
+        <!-- Advanced Line Chart -->
+        <div class="bg-white rounded-xl p-6 border border-gray-200">
+          <h2 class="text-gray-800 text-xl md:text-2xl font-bold mb-5">Annual Growth Trend</h2>
+          <div id="advanced-line-chart" class="bg-gray-50 rounded-lg p-4 min-h-[400px] h-[450px] flex items-stretch justify-center overflow-hidden"></div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl p-8 mb-12 border border-gray-200">
+        <h3 class="text-gray-800 text-2xl font-bold mb-5">Quick Start</h3>
+        <ul class="space-y-0">
+          <li class="py-3 text-gray-700 border-b border-gray-200">
+            <span class="text-blue-500 font-bold mr-3">✓</span>Include swy.min.css and swy.min.js in your HTML
+          </li>
+          <li class="py-3 text-gray-700 border-b border-gray-200">
+            <span class="text-blue-500 font-bold mr-3">✓</span>Add data-swy attributes to your HTML elements
+          </li>
+          <li class="py-3 text-gray-700 border-b border-gray-200">
+            <span class="text-blue-500 font-bold mr-3">✓</span>Charts auto-initialize on page load
+          </li>
+          <li class="py-3 text-gray-700 border-b border-gray-200">
+            <span class="text-blue-500 font-bold mr-3">✓</span>Or use the JavaScript API for dynamic data
+          </li>
+          <li class="py-3 text-gray-700 border-b border-gray-200">
+            <span class="text-blue-500 font-bold mr-3">✓</span>Customize colors, labels, and styling with CSS
+          </li>
+          <li class="py-3 text-gray-700">
+            <span class="text-blue-500 font-bold mr-3">✓</span>Charts automatically resize on window resize
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Include the SWY library -->
+    <script src="../dist/swy.min.js"></script>
+    <script>
+      // Bar Chart JS API Example
+      SWY.initBarChart({
+        container: '#bar-chart-js',
+        xAxis: 'Months',
+        yAxis: 'Revenue ($K)',
+        data: [
+          { xLabel: 'Jan', yValue: 300, color: '#ff6600' },
+          { xLabel: 'Feb', yValue: 400, color: '#2a22a2' },
+          { xLabel: 'Mar', yValue: 500, color: '#33cc33' },
+          { xLabel: 'Apr', yValue: 450, color: '#ffc107' },
+          { xLabel: 'May', yValue: 550, color: '#e91e63' },
+        ],
+      });
+
+      // Pie Chart JS API Example
+      SWY.initPieChart({
+        container: '#pie-chart-js',
+        total: 500,
+        data: [
+          { label: 'Backend', value: 200, color: '#ff6600' },
+          { label: 'Frontend', value: 180, color: '#2a22a2' },
+          { label: 'DevOps', value: 120, color: '#33cc33' },
+        ],
+      });
+
+      // Line Chart JS API Example
+      SWY.initLineChart({
+        container: '#line-chart-js',
+        xAxis: 'Weeks',
+        yAxis: 'Conversions',
+        data: [
+          { xLabel: 'W1', yValue: 100 },
+          { xLabel: 'W2', yValue: 150 },
+          { xLabel: 'W3', yValue: 130 },
+          { xLabel: 'W4', yValue: 200 },
+          { xLabel: 'W5', yValue: 250 },
+          { xLabel: 'W6', yValue: 220 },
+        ],
+      });
+
+      // Advanced Bar Chart - More data points
+      SWY.initBarChart({
+        container: '#advanced-bar-chart',
+        xAxis: 'Months',
+        yAxis: 'Sales Units',
+        data: [
+          { xLabel: 'Jan', yValue: 420, color: '#667eea' },
+          { xLabel: 'Feb', yValue: 510, color: '#764ba2' },
+          { xLabel: 'Mar', yValue: 630, color: '#f093fb' },
+          { xLabel: 'Apr', yValue: 580, color: '#4facfe' },
+          { xLabel: 'May', yValue: 720, color: '#00f2fe' },
+          { xLabel: 'Jun', yValue: 690, color: '#43e97b' },
+          { xLabel: 'Jul', yValue: 810, color: '#38f9d7' },
+          { xLabel: 'Aug', yValue: 890, color: '#fa709a' },
+          { xLabel: 'Sep', yValue: 760, color: '#fee140' },
+          { xLabel: 'Oct', yValue: 940, color: '#30cfd0' },
+          { xLabel: 'Nov', yValue: 1020, color: '#a8edea' },
+          { xLabel: 'Dec', yValue: 1150, color: '#ff6600' },
+        ],
+      });
+
+      // Advanced Pie Chart - Market Share
+      SWY.initPieChart({
+        container: '#advanced-pie-chart',
+        data: [
+          { label: 'Chrome', value: 640, color: '#4285f4' },
+          { label: 'Safari', value: 195, color: '#34c759' },
+          { label: 'Edge', value: 105, color: '#0078d7' },
+          { label: 'Firefox', value: 80, color: '#ff7139' },
+          { label: 'Others', value: 60, color: '#999999' },
+        ],
+      });
+
+      // Advanced Line Chart - Annual Trend
+      SWY.initLineChart({
+        container: '#advanced-line-chart',
+        xAxis: 'Quarters (2023-2024)',
+        yAxis: 'Revenue ($M)',
+        data: [
+          { xLabel: 'Q1 2023', yValue: 1.2 },
+          { xLabel: 'Q2 2023', yValue: 1.5 },
+          { xLabel: 'Q3 2023', yValue: 1.8 },
+          { xLabel: 'Q4 2023', yValue: 2.1 },
+          { xLabel: 'Q1 2024', yValue: 2.3 },
+          { xLabel: 'Q2 2024', yValue: 2.8 },
+          { xLabel: 'Q3 2024', yValue: 3.2 },
+          { xLabel: 'Q4 2024', yValue: 3.7 },
+        ],
+      });
+
+      // Enable debug mode for development (uncomment to see console logs)
+      // SWY.setDebugMode(true);
+
+      console.log('SWY Version:', SWY.getVersion());
+    </script>
+  </body>
+</html>
