@@ -2,6 +2,8 @@
 
 A lightweight, dependency-free JavaScript library for creating beautiful data visualizations using HTML, CSS, and SVG. Define charts with custom HTML attributes or use the JavaScript API. Perfect for developers who need quick, professional-looking charts without the overhead of large charting libraries.
 
+![SenangWebs Yield Preview](https://raw.githubusercontent.com/a-hakim/senangwebs-yield/master/swy_preview.png)
+
 ## Features
 
 - **Lightweight** - Zero external dependencies, vanilla JavaScript
