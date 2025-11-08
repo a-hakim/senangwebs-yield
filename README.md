@@ -4,6 +4,8 @@ A lightweight, dependency-free JavaScript library for creating beautiful data vi
 
 ![SenangWebs Yield Preview](https://raw.githubusercontent.com/a-hakim/senangwebs-yield/master/swy_preview.png)
 
+SenangWebs Yield [Demo](https://dev.use.senangwebs.com/maker/senangwebs-yield).
+
 ## Features
 
 - **Lightweight** - Zero external dependencies, vanilla JavaScript
