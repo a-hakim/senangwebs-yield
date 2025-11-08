@@ -1,6 +1,6 @@
 {
   "name": "senangwebs-yield",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A lightweight, dependency-free JavaScript library for creating simple data visualizations (bar, pie, and line charts) using custom HTML attributes or a JavaScript API.",
   "main": "dist/swy.js",
   "unpkg": "dist/swy.min.js",
