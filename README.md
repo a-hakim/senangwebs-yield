@@ -25,8 +25,8 @@ npm install senangwebs-yield
 ### Direct Script Tag
 ```html
 <!-- Include both CSS and JS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/senangwebs-yield@1.0.0/dist/swy.min.css">
-<script src="https://cdn.jsdelivr.net/npm/senangwebs-yield@1.0.0/dist/swy.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/senangwebs-yield@latest/dist/swy.min.css">
+<script src="https://cdn.jsdelivr.net/npm/senangwebs-yield@latest/dist/swy.min.js"></script>
 ```
 
 ### Manual Download
