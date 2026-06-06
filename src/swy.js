@@ -14,11 +14,37 @@ import PieChart from './charts/pieChart.js';
 import LineChart from './charts/lineChart.js';
 
 // Version
-const VERSION = '1.0.0';
+const VERSION = '1.0.2';
+const RESIZE_DEBOUNCE_MS = 150;
 
 // Chart registry
 const chartRegistry = new Map();
 let chartIdCounter = 0;
+let resizeTimer = null;
+
+/**
+ * Register a rendered chart, replacing any previous chart for the same element
+ * @param {string} chartId - Unique chart identifier
+ * @param {Object} chart - Rendered chart instance
+ */
+function registerChart(chartId, chart) {
+  chartRegistry.forEach((registeredChart, registeredId) => {
+    if (registeredChart.element === chart.element) {
+      chartRegistry.delete(registeredId);
+    }
+  });
+
+  chartRegistry.set(chartId, chart);
+}
+
+/**
+ * Check whether an element already has a registered chart
+ * @param {Element} element - Chart container element
+ * @returns {boolean}
+ */
+function isChartRegistered(element) {
+  return Array.from(chartRegistry.values()).some((chart) => chart.element === element);
+}
 
 /**
  * Initialize bar chart from JavaScript API
@@ -48,7 +74,7 @@ function initBarChart(options) {
   chartIdCounter += 1;
 
   if (barChart.render()) {
-    chartRegistry.set(chartId, barChart);
+    registerChart(chartId, barChart);
     logger.debug(`Bar chart initialized: ${chartId}`);
     return true;
   }
@@ -89,7 +115,7 @@ function initPieChart(options) {
   chartIdCounter += 1;
 
   if (pieChart.render()) {
-    chartRegistry.set(chartId, pieChart);
+    registerChart(chartId, pieChart);
     logger.debug(`Pie chart initialized: ${chartId}`);
     return true;
   }
@@ -125,7 +151,7 @@ function initLineChart(options) {
   chartIdCounter += 1;
 
   if (lineChart.render()) {
-    chartRegistry.set(chartId, lineChart);
+    registerChart(chartId, lineChart);
     logger.debug(`Line chart initialized: ${chartId}`);
     return true;
   }
@@ -140,6 +166,10 @@ function initializeFromHTML() {
   const charts = Parser.findAllCharts();
 
   charts.forEach((chartElement) => {
+    if (isChartRegistered(chartElement)) {
+      return;
+    }
+
     const chartType = DOM.getAttribute(chartElement, 'data-swy-type');
     let config = null;
 
@@ -151,7 +181,7 @@ function initializeFromHTML() {
           const chartId = `bar-chart-${chartIdCounter}`;
           chartIdCounter += 1;
           if (barChart.render()) {
-            chartRegistry.set(chartId, barChart);
+            registerChart(chartId, barChart);
             logger.debug(`Bar chart auto-initialized: ${chartId}`);
           }
         }
@@ -164,7 +194,7 @@ function initializeFromHTML() {
           const chartId = `pie-chart-${chartIdCounter}`;
           chartIdCounter += 1;
           if (pieChart.render()) {
-            chartRegistry.set(chartId, pieChart);
+            registerChart(chartId, pieChart);
             logger.debug(`Pie chart auto-initialized: ${chartId}`);
           }
         }
@@ -177,7 +207,7 @@ function initializeFromHTML() {
           const chartId = `line-chart-${chartIdCounter}`;
           chartIdCounter += 1;
           if (lineChart.render()) {
-            chartRegistry.set(chartId, lineChart);
+            registerChart(chartId, lineChart);
             logger.debug(`Line chart auto-initialized: ${chartId}`);
           }
         }
@@ -209,11 +239,18 @@ function getVersion() {
  * Reinitialize all charts (useful for responsive layouts)
  */
 function reinitialize() {
-  // Clear existing charts
-  chartRegistry.clear();
-  chartIdCounter = 0;
+  chartRegistry.forEach((chart, chartId) => {
+    if (!document.documentElement.contains(chart.element)) {
+      chartRegistry.delete(chartId);
+      return;
+    }
 
-  // Reinitialize from HTML
+    if (!chart.render()) {
+      logger.warn(`Failed to reinitialize chart: ${chartId}`);
+    }
+  });
+
+  // Initialize declarative charts added after page load.
   initializeFromHTML();
 }
 
@@ -236,8 +273,11 @@ DOM.onReady(() => {
 
 // Handle window resize for responsive charts
 window.addEventListener('resize', () => {
-  logger.debug('Window resized, reinitializing charts');
-  reinitialize();
+  window.clearTimeout(resizeTimer);
+  resizeTimer = window.setTimeout(() => {
+    logger.debug('Window resized, reinitializing charts');
+    reinitialize();
+  }, RESIZE_DEBOUNCE_MS);
 });
 
 // Export as ES module

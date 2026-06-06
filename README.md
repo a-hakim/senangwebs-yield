@@ -16,6 +16,7 @@ SenangWebs Yield [Demo](https://dev.use.senangwebs.com/maker/senangwebs-yield).
 - **Customizable** - Easy to style with CSS, no coding knowledge required
 - **Accessible** - Semantic HTML elements for better accessibility
 - **Auto-initialization** - Charts initialize automatically from HTML markup on page load
+- **Responsive Updates** - Existing charts re-render after a debounced window resize
 
 ## Installation
 
@@ -281,7 +282,7 @@ Since charts are rendered with HTML and CSS, you can easily customize their appe
 ```
 
 ### Responsive Design
-Charts automatically resize to fit their container and reinitialize when the window is resized. To ensure proper responsiveness:
+Charts automatically resize to fit their container. Window resize events are debounced by 150ms, then existing HTML and JavaScript API charts re-render in place.
 
 ```css
 /* Make chart containers responsive */
@@ -306,7 +307,7 @@ Charts automatically resize to fit their container and reinitialize when the win
 The library exposes a global `SWY` object with the following methods:
 
 #### `SWY.initBarChart(options)`
-Initialize a bar chart programmatically.
+Initialize a bar chart programmatically. Initializing the same container again replaces its previously registered chart.
 
 **Parameters:**
 - `options.container` (string) - CSS selector for the container element
@@ -386,22 +387,20 @@ SWY.setDebugMode(true); // Enable debug logs
 ```
 
 #### `SWY.reinitialize()`
-Reinitialize all charts on the page. Useful when container sizes change or after dynamic content updates.
+Re-render all registered charts and initialize any new declarative charts added after page load. Detached chart containers are removed from the internal registry.
 
 **Returns:** `void`
 
 **Example:**
 ```javascript
-// After window resize or layout change
-window.addEventListener('resize', () => {
-    SWY.reinitialize();
-});
+// After changing a chart container's layout or adding new data-swy markup
+SWY.reinitialize();
 ```
 
 #### `SWY.getVersion()`
 Get the current library version.
 
-**Returns:** `string` - Version number (e.g., "1.0.0")
+**Returns:** `string` - Version number (e.g., "1.0.2")
 
 **Example:**
 ```javascript
@@ -449,8 +448,8 @@ npm run build
 Output files are created in the `dist/` directory:
 - `swy.min.js` - Minified JavaScript
 - `swy.min.css` - Minified CSS
-- `swy.js` - Non-minified JavaScript
-- `swy.css` - Non-minified CSS
+
+Run `npm run build:dev` to create the non-minified `swy.js` and `swy.css` files.
 
 ### Development Build
 Build without minification for debugging:
@@ -516,10 +515,10 @@ SenangWebs Yield is perfect for:
 
 ## Performance
 
-- **Tiny Bundle Size** - Less than 20KB minified (JS + CSS combined)
+- **Small Bundle Size** - About 32KB minified (JS + CSS combined)
 - **Fast Rendering** - HTML/CSS rendering is faster than Canvas for simple charts
 - **Zero Dependencies** - No jQuery, React, or other frameworks required
-- **Efficient Updates** - Charts only re-render when necessary
+- **Efficient Updates** - Resize-driven re-renders are debounced and reuse registered chart instances
 - **Mobile Optimized** - Smooth performance on mobile devices
 
 ## Examples
