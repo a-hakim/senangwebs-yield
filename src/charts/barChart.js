@@ -6,11 +6,12 @@
 import DOM from '../utils/dom.js';
 import Validator from '../utils/validator.js';
 import logger from '../utils/logger.js';
+import { normalizeOptions, paletteColor, applyAnimation } from '../utils/options.js';
 
 class BarChart {
   constructor(element, config) {
     this.element = element;
-    this.config = config;
+    this.config = config ? { ...config, ...normalizeOptions('bar-chart', config) } : config;
     this.container = null;
   }
 
@@ -21,6 +22,7 @@ class BarChart {
     // Validate configuration
     if (!Validator.validateBarChart(this.config)) {
       logger.error('Invalid bar chart configuration');
+      this.renderError();
       return false;
     }
 
@@ -37,6 +39,13 @@ class BarChart {
       // Create main chart container
       this.container = DOM.create('div', {}, 'swy-chart-container');
       DOM.addClass(this.container, 'swy-bar-chart');
+      applyAnimation(this.container, this.config);
+      const horizontal = this.config.orientation === 'horizontal';
+      if (horizontal) this.container.classList.add('swy-bar-horizontal');
+      if (this.config.barGap !== 20) {
+        this.container.style.setProperty('--swy-bar-gap', `${this.config.barGap}px`);
+      }
+      this.container.style.setProperty('--swy-bar-radius', `${this.config.barRadius}px`);
 
       // Calculate max value for scaling
       const values = data.map((d) => d.yValue);
@@ -48,10 +57,24 @@ class BarChart {
       // Create bars
       data.forEach((point, index) => {
         const percentage = (point.yValue / scale) * 100;
-        const color = point.color || BarChart.getDefaultBarColor(index);
+        const color = Validator.resolveColor(
+          point.color,
+          paletteColor(this.config, index),
+          `bar chart data[${index}] "${point.xLabel || ''}"`,
+        );
         const label = point.xLabel || `Item ${index + 1}`;
 
         const bar = DOM.createBar(percentage, color, label, point.yValue);
+        const shape = bar.querySelector('.swy-bar');
+        if (!this.config.showValues) bar.querySelector('.swy-bar-value').remove();
+        if (horizontal) {
+          const track = DOM.create('div', {}, 'swy-bar-track');
+          shape.style.height = '';
+          shape.style.width = `${percentage}%`;
+          shape.style.setProperty('--swy-bar-width', `${percentage}%`);
+          DOM.append(track, shape);
+          DOM.append(bar, track);
+        }
         DOM.append(wrapper, bar);
       });
 
@@ -76,8 +99,15 @@ class BarChart {
         'swy-bar-chart-axis-label',
       );
 
-      DOM.append(axesSection, [xAxisLabel, yAxisLabel]);
+      DOM.append(axesSection, horizontal ? [yAxisLabel, xAxisLabel] : [xAxisLabel, yAxisLabel]);
       DOM.append(this.container, axesSection);
+
+      // Accessible summary (visually hidden)
+      const summary = DOM.createAccessibleSummary(
+        `${horizontal ? 'Horizontal bar' : 'Bar'} chart: ${this.config.yAxis || 'Y-Axis'} by ${this.config.xAxis || 'X-Axis'}`,
+        data.map((point) => `${point.xLabel || ''}: ${DOM.formatNumber(point.yValue)}`),
+      );
+      DOM.append(this.container, summary);
 
       // Append to element
       DOM.append(this.element, this.container);
@@ -86,8 +116,21 @@ class BarChart {
       return true;
     } catch (error) {
       logger.error('Failed to render bar chart', error);
+      this.renderError();
       return false;
     }
+  }
+
+  /**
+   * Show a visible fallback message in place of the chart
+   * @private
+   */
+  renderError() {
+    if (!this.element || this.element.querySelector('.swy-render-error')) {
+      return;
+    }
+    DOM.clear(this.element);
+    DOM.append(this.element, DOM.createErrorMessage('SWY: chart could not be rendered. Check the console for details.'));
   }
 
   /**
@@ -109,8 +152,7 @@ class BarChart {
    * @private
    */
   static getDefaultBarColor(index) {
-    const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#00f2fe', '#43e97b', '#fa709a', '#fee140'];
-    return colors[index % colors.length];
+    return paletteColor({}, index);
   }
 }
 

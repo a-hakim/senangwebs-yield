@@ -9,6 +9,21 @@
     <!-- Include the SWY library styles -->
     <link rel="stylesheet" href="../dist/swy.min.css" />
 
+    <style>
+      .swy-example-variations { max-width: 1280px; margin: 48px auto; }
+      .swy-example-variations h2 { font-size: 30px; font-weight: 700; margin-bottom: 12px; }
+      .swy-example-variation { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin-top: 24px; }
+      .swy-example-variation h3 { font-size: 22px; font-weight: 600; margin-bottom: 16px; }
+      .swy-example-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+      .swy-example-pair > div { min-width: 0; }
+      .swy-example-pair h4 { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
+      .swy-example-pair summary { cursor: pointer; padding: 12px 0; }
+      .swy-example-pair pre { max-height: 360px; overflow: auto; background: #f3f4f6; padding: 16px; font-size: 12px; }
+      @media (max-width: 800px) {
+        .swy-example-pair { grid-template-columns: minmax(0, 1fr); }
+        .swy-example-variation { padding: 12px; }
+      }
+    </style>
   </head>
   <body class="font-sans min-h-screen py-10 px-5 bg-gradient-to-br from-gray-50 to-blue-50">
     <div class="max-w-7xl mx-auto">
@@ -251,6 +266,424 @@
       </div>
     </div>
 
+
+    <section class="swy-example-variations" aria-labelledby="variations-title">
+      <h2 id="variations-title">Chart variations &amp; customization</h2>
+      <p>Matching HTML and JavaScript examples. Resize your window to see charts adapt; expand each source panel to copy the configuration.</p>
+      <article class="swy-example-variation">
+        <h3>Horizontal bars</h3>
+        <div class="swy-example-pair">
+          <div><h4>HTML attributes</h4><div data-swy style="height: 440px">
+  <div data-swy-type="bar-chart"
+       data-swy-x-axis="Month"
+       data-swy-y-axis="Visits"
+       data-swy-orientation="horizontal"
+       data-swy-bar-gap="12"
+       data-swy-bar-radius="6"
+       data-swy-palette="[&quot;#0f766e&quot;,&quot;#2563eb&quot;,&quot;#d97706&quot;,&quot;#9333ea&quot;]"
+       data-swy-animate="false" style="height: 100%">
+    <div data-swy-x-label="Jan" data-swy-y-value="35"></div>
+    <div data-swy-x-label="Feb" data-swy-y-value="65"></div>
+    <div data-swy-x-label="Mar" data-swy-y-value="50"></div>
+    <div data-swy-x-label="Apr" data-swy-y-value="80"></div>
+  </div>
+</div>
+            <details><summary>HTML source</summary><pre><code>&lt;div data-swy style=&quot;height: 440px&quot;&gt;
+  &lt;div data-swy-type=&quot;bar-chart&quot;
+       data-swy-x-axis=&quot;Month&quot;
+       data-swy-y-axis=&quot;Visits&quot;
+       data-swy-orientation=&quot;horizontal&quot;
+       data-swy-bar-gap=&quot;12&quot;
+       data-swy-bar-radius=&quot;6&quot;
+       data-swy-palette=&quot;[&amp;quot;#0f766e&amp;quot;,&amp;quot;#2563eb&amp;quot;,&amp;quot;#d97706&amp;quot;,&amp;quot;#9333ea&amp;quot;]&quot;
+       data-swy-animate=&quot;false&quot; style=&quot;height: 100%&quot;&gt;
+    &lt;div data-swy-x-label=&quot;Jan&quot; data-swy-y-value=&quot;35&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-x-label=&quot;Feb&quot; data-swy-y-value=&quot;65&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-x-label=&quot;Mar&quot; data-swy-y-value=&quot;50&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-x-label=&quot;Apr&quot; data-swy-y-value=&quot;80&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+          </div>
+          <div><h4>JavaScript API</h4><div id="variation-horizontal" style="height: 440px"></div>
+            <details><summary>JavaScript source</summary><pre><code>&lt;div id=&quot;variation-horizontal&quot; style=&quot;height: 440px&quot;&gt;&lt;/div&gt;
+SWY.initBarChart({
+  &quot;container&quot;: &quot;#variation-horizontal&quot;,
+  &quot;xAxis&quot;: &quot;Month&quot;,
+  &quot;yAxis&quot;: &quot;Visits&quot;,
+  &quot;orientation&quot;: &quot;horizontal&quot;,
+  &quot;barGap&quot;: 12,
+  &quot;barRadius&quot;: 6,
+  &quot;palette&quot;: [
+    &quot;#0f766e&quot;,
+    &quot;#2563eb&quot;,
+    &quot;#d97706&quot;,
+    &quot;#9333ea&quot;
+  ],
+  &quot;animate&quot;: false,
+  &quot;data&quot;: [
+    {
+      &quot;xLabel&quot;: &quot;Jan&quot;,
+      &quot;yValue&quot;: 35
+    },
+    {
+      &quot;xLabel&quot;: &quot;Feb&quot;,
+      &quot;yValue&quot;: 65
+    },
+    {
+      &quot;xLabel&quot;: &quot;Mar&quot;,
+      &quot;yValue&quot;: 50
+    },
+    {
+      &quot;xLabel&quot;: &quot;Apr&quot;,
+      &quot;yValue&quot;: 80
+    }
+  ]
+});</code></pre></details>
+          </div>
+        </div>
+      </article>
+      <article class="swy-example-variation">
+        <h3>Rounded bars without value labels</h3>
+        <div class="swy-example-pair">
+          <div><h4>HTML attributes</h4><div data-swy style="height: 440px">
+  <div data-swy-type="bar-chart"
+       data-swy-x-axis="Month"
+       data-swy-y-axis="Visits"
+       data-swy-bar-gap="8"
+       data-swy-bar-radius="12"
+       data-swy-show-values="false"
+       data-swy-palette="[&quot;#0f766e&quot;,&quot;#2563eb&quot;,&quot;#d97706&quot;,&quot;#9333ea&quot;]" style="height: 100%">
+    <div data-swy-x-label="Jan" data-swy-y-value="35"></div>
+    <div data-swy-x-label="Feb" data-swy-y-value="65"></div>
+    <div data-swy-x-label="Mar" data-swy-y-value="50"></div>
+    <div data-swy-x-label="Apr" data-swy-y-value="80"></div>
+  </div>
+</div>
+            <details><summary>HTML source</summary><pre><code>&lt;div data-swy style=&quot;height: 440px&quot;&gt;
+  &lt;div data-swy-type=&quot;bar-chart&quot;
+       data-swy-x-axis=&quot;Month&quot;
+       data-swy-y-axis=&quot;Visits&quot;
+       data-swy-bar-gap=&quot;8&quot;
+       data-swy-bar-radius=&quot;12&quot;
+       data-swy-show-values=&quot;false&quot;
+       data-swy-palette=&quot;[&amp;quot;#0f766e&amp;quot;,&amp;quot;#2563eb&amp;quot;,&amp;quot;#d97706&amp;quot;,&amp;quot;#9333ea&amp;quot;]&quot; style=&quot;height: 100%&quot;&gt;
+    &lt;div data-swy-x-label=&quot;Jan&quot; data-swy-y-value=&quot;35&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-x-label=&quot;Feb&quot; data-swy-y-value=&quot;65&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-x-label=&quot;Mar&quot; data-swy-y-value=&quot;50&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-x-label=&quot;Apr&quot; data-swy-y-value=&quot;80&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+          </div>
+          <div><h4>JavaScript API</h4><div id="variation-rounded" style="height: 440px"></div>
+            <details><summary>JavaScript source</summary><pre><code>&lt;div id=&quot;variation-rounded&quot; style=&quot;height: 440px&quot;&gt;&lt;/div&gt;
+SWY.initBarChart({
+  &quot;container&quot;: &quot;#variation-rounded&quot;,
+  &quot;xAxis&quot;: &quot;Month&quot;,
+  &quot;yAxis&quot;: &quot;Visits&quot;,
+  &quot;barGap&quot;: 8,
+  &quot;barRadius&quot;: 12,
+  &quot;showValues&quot;: false,
+  &quot;palette&quot;: [
+    &quot;#0f766e&quot;,
+    &quot;#2563eb&quot;,
+    &quot;#d97706&quot;,
+    &quot;#9333ea&quot;
+  ],
+  &quot;data&quot;: [
+    {
+      &quot;xLabel&quot;: &quot;Jan&quot;,
+      &quot;yValue&quot;: 35
+    },
+    {
+      &quot;xLabel&quot;: &quot;Feb&quot;,
+      &quot;yValue&quot;: 65
+    },
+    {
+      &quot;xLabel&quot;: &quot;Mar&quot;,
+      &quot;yValue&quot;: 50
+    },
+    {
+      &quot;xLabel&quot;: &quot;Apr&quot;,
+      &quot;yValue&quot;: 80
+    }
+  ]
+});</code></pre></details>
+          </div>
+        </div>
+      </article>
+      <article class="swy-example-variation">
+        <h3>Doughnut with center text</h3>
+        <div class="swy-example-pair">
+          <div><h4>HTML attributes</h4><div data-swy style="height: 440px">
+  <div data-swy-type="pie-chart"
+       data-swy-variant="doughnut"
+       data-swy-hole-size="65"
+       data-swy-center-text="230 visits"
+       data-swy-legend-position="bottom"
+       data-swy-palette="[&quot;#0f766e&quot;,&quot;#2563eb&quot;,&quot;#d97706&quot;,&quot;#9333ea&quot;]" style="height: 100%">
+    <div data-swy-label="Jan" data-swy-value="35"></div>
+    <div data-swy-label="Feb" data-swy-value="65"></div>
+    <div data-swy-label="Mar" data-swy-value="50"></div>
+    <div data-swy-label="Apr" data-swy-value="80"></div>
+  </div>
+</div>
+            <details><summary>HTML source</summary><pre><code>&lt;div data-swy style=&quot;height: 440px&quot;&gt;
+  &lt;div data-swy-type=&quot;pie-chart&quot;
+       data-swy-variant=&quot;doughnut&quot;
+       data-swy-hole-size=&quot;65&quot;
+       data-swy-center-text=&quot;230 visits&quot;
+       data-swy-legend-position=&quot;bottom&quot;
+       data-swy-palette=&quot;[&amp;quot;#0f766e&amp;quot;,&amp;quot;#2563eb&amp;quot;,&amp;quot;#d97706&amp;quot;,&amp;quot;#9333ea&amp;quot;]&quot; style=&quot;height: 100%&quot;&gt;
+    &lt;div data-swy-label=&quot;Jan&quot; data-swy-value=&quot;35&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-label=&quot;Feb&quot; data-swy-value=&quot;65&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-label=&quot;Mar&quot; data-swy-value=&quot;50&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-label=&quot;Apr&quot; data-swy-value=&quot;80&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+          </div>
+          <div><h4>JavaScript API</h4><div id="variation-doughnut" style="height: 440px"></div>
+            <details><summary>JavaScript source</summary><pre><code>&lt;div id=&quot;variation-doughnut&quot; style=&quot;height: 440px&quot;&gt;&lt;/div&gt;
+SWY.initPieChart({
+  &quot;container&quot;: &quot;#variation-doughnut&quot;,
+  &quot;variant&quot;: &quot;doughnut&quot;,
+  &quot;holeSize&quot;: 65,
+  &quot;centerText&quot;: &quot;230 visits&quot;,
+  &quot;legendPosition&quot;: &quot;bottom&quot;,
+  &quot;palette&quot;: [
+    &quot;#0f766e&quot;,
+    &quot;#2563eb&quot;,
+    &quot;#d97706&quot;,
+    &quot;#9333ea&quot;
+  ],
+  &quot;data&quot;: [
+    {
+      &quot;label&quot;: &quot;Jan&quot;,
+      &quot;value&quot;: 35
+    },
+    {
+      &quot;label&quot;: &quot;Feb&quot;,
+      &quot;value&quot;: 65
+    },
+    {
+      &quot;label&quot;: &quot;Mar&quot;,
+      &quot;value&quot;: 50
+    },
+    {
+      &quot;label&quot;: &quot;Apr&quot;,
+      &quot;value&quot;: 80
+    }
+  ]
+});</code></pre></details>
+          </div>
+        </div>
+      </article>
+      <article class="swy-example-variation">
+        <h3>Area chart</h3>
+        <div class="swy-example-pair">
+          <div><h4>HTML attributes</h4><div data-swy style="height: 440px">
+  <div data-swy-type="line-chart"
+       data-swy-x-axis="Month"
+       data-swy-y-axis="Visits"
+       data-swy-variant="area"
+       data-swy-line-color="#0f766e"
+       data-swy-fill-opacity="0.25"
+       data-swy-show-points="false"
+       data-swy-animate="false" style="height: 100%">
+    <div data-swy-x-label="Jan" data-swy-y-value="35"></div>
+    <div data-swy-x-label="Feb" data-swy-y-value="65"></div>
+    <div data-swy-x-label="Mar" data-swy-y-value="50"></div>
+    <div data-swy-x-label="Apr" data-swy-y-value="80"></div>
+  </div>
+</div>
+            <details><summary>HTML source</summary><pre><code>&lt;div data-swy style=&quot;height: 440px&quot;&gt;
+  &lt;div data-swy-type=&quot;line-chart&quot;
+       data-swy-x-axis=&quot;Month&quot;
+       data-swy-y-axis=&quot;Visits&quot;
+       data-swy-variant=&quot;area&quot;
+       data-swy-line-color=&quot;#0f766e&quot;
+       data-swy-fill-opacity=&quot;0.25&quot;
+       data-swy-show-points=&quot;false&quot;
+       data-swy-animate=&quot;false&quot; style=&quot;height: 100%&quot;&gt;
+    &lt;div data-swy-x-label=&quot;Jan&quot; data-swy-y-value=&quot;35&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-x-label=&quot;Feb&quot; data-swy-y-value=&quot;65&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-x-label=&quot;Mar&quot; data-swy-y-value=&quot;50&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-x-label=&quot;Apr&quot; data-swy-y-value=&quot;80&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+          </div>
+          <div><h4>JavaScript API</h4><div id="variation-area" style="height: 440px"></div>
+            <details><summary>JavaScript source</summary><pre><code>&lt;div id=&quot;variation-area&quot; style=&quot;height: 440px&quot;&gt;&lt;/div&gt;
+SWY.initLineChart({
+  &quot;container&quot;: &quot;#variation-area&quot;,
+  &quot;xAxis&quot;: &quot;Month&quot;,
+  &quot;yAxis&quot;: &quot;Visits&quot;,
+  &quot;variant&quot;: &quot;area&quot;,
+  &quot;lineColor&quot;: &quot;#0f766e&quot;,
+  &quot;fillOpacity&quot;: 0.25,
+  &quot;showPoints&quot;: false,
+  &quot;animate&quot;: false,
+  &quot;data&quot;: [
+    {
+      &quot;xLabel&quot;: &quot;Jan&quot;,
+      &quot;yValue&quot;: 35
+    },
+    {
+      &quot;xLabel&quot;: &quot;Feb&quot;,
+      &quot;yValue&quot;: 65
+    },
+    {
+      &quot;xLabel&quot;: &quot;Mar&quot;,
+      &quot;yValue&quot;: 50
+    },
+    {
+      &quot;xLabel&quot;: &quot;Apr&quot;,
+      &quot;yValue&quot;: 80
+    }
+  ]
+});</code></pre></details>
+          </div>
+        </div>
+      </article>
+      <article class="swy-example-variation">
+        <h3>Smooth line</h3>
+        <div class="swy-example-pair">
+          <div><h4>HTML attributes</h4><div data-swy style="height: 440px">
+  <div data-swy-type="line-chart"
+       data-swy-x-axis="Month"
+       data-swy-y-axis="Visits"
+       data-swy-curve="smooth"
+       data-swy-line-color="#7c3aed"
+       data-swy-line-width="4"
+       data-swy-point-size="12"
+       data-swy-palette="[&quot;#7c3aed&quot;]" style="height: 100%">
+    <div data-swy-x-label="Jan" data-swy-y-value="35"></div>
+    <div data-swy-x-label="Feb" data-swy-y-value="65"></div>
+    <div data-swy-x-label="Mar" data-swy-y-value="50"></div>
+    <div data-swy-x-label="Apr" data-swy-y-value="80"></div>
+  </div>
+</div>
+            <details><summary>HTML source</summary><pre><code>&lt;div data-swy style=&quot;height: 440px&quot;&gt;
+  &lt;div data-swy-type=&quot;line-chart&quot;
+       data-swy-x-axis=&quot;Month&quot;
+       data-swy-y-axis=&quot;Visits&quot;
+       data-swy-curve=&quot;smooth&quot;
+       data-swy-line-color=&quot;#7c3aed&quot;
+       data-swy-line-width=&quot;4&quot;
+       data-swy-point-size=&quot;12&quot;
+       data-swy-palette=&quot;[&amp;quot;#7c3aed&amp;quot;]&quot; style=&quot;height: 100%&quot;&gt;
+    &lt;div data-swy-x-label=&quot;Jan&quot; data-swy-y-value=&quot;35&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-x-label=&quot;Feb&quot; data-swy-y-value=&quot;65&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-x-label=&quot;Mar&quot; data-swy-y-value=&quot;50&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-x-label=&quot;Apr&quot; data-swy-y-value=&quot;80&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+          </div>
+          <div><h4>JavaScript API</h4><div id="variation-smooth" style="height: 440px"></div>
+            <details><summary>JavaScript source</summary><pre><code>&lt;div id=&quot;variation-smooth&quot; style=&quot;height: 440px&quot;&gt;&lt;/div&gt;
+SWY.initLineChart({
+  &quot;container&quot;: &quot;#variation-smooth&quot;,
+  &quot;xAxis&quot;: &quot;Month&quot;,
+  &quot;yAxis&quot;: &quot;Visits&quot;,
+  &quot;curve&quot;: &quot;smooth&quot;,
+  &quot;lineColor&quot;: &quot;#7c3aed&quot;,
+  &quot;lineWidth&quot;: 4,
+  &quot;pointSize&quot;: 12,
+  &quot;palette&quot;: [
+    &quot;#7c3aed&quot;
+  ],
+  &quot;data&quot;: [
+    {
+      &quot;xLabel&quot;: &quot;Jan&quot;,
+      &quot;yValue&quot;: 35
+    },
+    {
+      &quot;xLabel&quot;: &quot;Feb&quot;,
+      &quot;yValue&quot;: 65
+    },
+    {
+      &quot;xLabel&quot;: &quot;Mar&quot;,
+      &quot;yValue&quot;: 50
+    },
+    {
+      &quot;xLabel&quot;: &quot;Apr&quot;,
+      &quot;yValue&quot;: 80
+    }
+  ]
+});</code></pre></details>
+          </div>
+        </div>
+      </article>
+      <article class="swy-example-variation">
+        <h3>Stepped line</h3>
+        <div class="swy-example-pair">
+          <div><h4>HTML attributes</h4><div data-swy style="height: 440px">
+  <div data-swy-type="line-chart"
+       data-swy-x-axis="Month"
+       data-swy-y-axis="Visits"
+       data-swy-curve="step"
+       data-swy-line-color="#d97706"
+       data-swy-line-width="3"
+       data-swy-point-size="8"
+       data-swy-palette="[&quot;#d97706&quot;]" style="height: 100%">
+    <div data-swy-x-label="Jan" data-swy-y-value="35"></div>
+    <div data-swy-x-label="Feb" data-swy-y-value="65"></div>
+    <div data-swy-x-label="Mar" data-swy-y-value="50"></div>
+    <div data-swy-x-label="Apr" data-swy-y-value="80"></div>
+  </div>
+</div>
+            <details><summary>HTML source</summary><pre><code>&lt;div data-swy style=&quot;height: 440px&quot;&gt;
+  &lt;div data-swy-type=&quot;line-chart&quot;
+       data-swy-x-axis=&quot;Month&quot;
+       data-swy-y-axis=&quot;Visits&quot;
+       data-swy-curve=&quot;step&quot;
+       data-swy-line-color=&quot;#d97706&quot;
+       data-swy-line-width=&quot;3&quot;
+       data-swy-point-size=&quot;8&quot;
+       data-swy-palette=&quot;[&amp;quot;#d97706&amp;quot;]&quot; style=&quot;height: 100%&quot;&gt;
+    &lt;div data-swy-x-label=&quot;Jan&quot; data-swy-y-value=&quot;35&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-x-label=&quot;Feb&quot; data-swy-y-value=&quot;65&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-x-label=&quot;Mar&quot; data-swy-y-value=&quot;50&quot;&gt;&lt;/div&gt;
+    &lt;div data-swy-x-label=&quot;Apr&quot; data-swy-y-value=&quot;80&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre></details>
+          </div>
+          <div><h4>JavaScript API</h4><div id="variation-step" style="height: 440px"></div>
+            <details><summary>JavaScript source</summary><pre><code>&lt;div id=&quot;variation-step&quot; style=&quot;height: 440px&quot;&gt;&lt;/div&gt;
+SWY.initLineChart({
+  &quot;container&quot;: &quot;#variation-step&quot;,
+  &quot;xAxis&quot;: &quot;Month&quot;,
+  &quot;yAxis&quot;: &quot;Visits&quot;,
+  &quot;curve&quot;: &quot;step&quot;,
+  &quot;lineColor&quot;: &quot;#d97706&quot;,
+  &quot;lineWidth&quot;: 3,
+  &quot;pointSize&quot;: 8,
+  &quot;palette&quot;: [
+    &quot;#d97706&quot;
+  ],
+  &quot;data&quot;: [
+    {
+      &quot;xLabel&quot;: &quot;Jan&quot;,
+      &quot;yValue&quot;: 35
+    },
+    {
+      &quot;xLabel&quot;: &quot;Feb&quot;,
+      &quot;yValue&quot;: 65
+    },
+    {
+      &quot;xLabel&quot;: &quot;Mar&quot;,
+      &quot;yValue&quot;: 50
+    },
+    {
+      &quot;xLabel&quot;: &quot;Apr&quot;,
+      &quot;yValue&quot;: 80
+    }
+  ]
+});</code></pre></details>
+          </div>
+        </div>
+      </article>
+    </section>
+
     <!-- Include the SWY library -->
     <script src="../dist/swy.min.js"></script>
     <script>
@@ -343,6 +776,197 @@
           { xLabel: 'Q4 2024', yValue: 3.7 },
         ],
       });
+
+
+      SWY.initBarChart({
+  "container": "#variation-horizontal",
+  "xAxis": "Month",
+  "yAxis": "Visits",
+  "orientation": "horizontal",
+  "barGap": 12,
+  "barRadius": 6,
+  "palette": [
+    "#0f766e",
+    "#2563eb",
+    "#d97706",
+    "#9333ea"
+  ],
+  "animate": false,
+  "data": [
+    {
+      "xLabel": "Jan",
+      "yValue": 35
+    },
+    {
+      "xLabel": "Feb",
+      "yValue": 65
+    },
+    {
+      "xLabel": "Mar",
+      "yValue": 50
+    },
+    {
+      "xLabel": "Apr",
+      "yValue": 80
+    }
+  ]
+});
+
+      SWY.initBarChart({
+  "container": "#variation-rounded",
+  "xAxis": "Month",
+  "yAxis": "Visits",
+  "barGap": 8,
+  "barRadius": 12,
+  "showValues": false,
+  "palette": [
+    "#0f766e",
+    "#2563eb",
+    "#d97706",
+    "#9333ea"
+  ],
+  "data": [
+    {
+      "xLabel": "Jan",
+      "yValue": 35
+    },
+    {
+      "xLabel": "Feb",
+      "yValue": 65
+    },
+    {
+      "xLabel": "Mar",
+      "yValue": 50
+    },
+    {
+      "xLabel": "Apr",
+      "yValue": 80
+    }
+  ]
+});
+
+      SWY.initPieChart({
+  "container": "#variation-doughnut",
+  "variant": "doughnut",
+  "holeSize": 65,
+  "centerText": "230 visits",
+  "legendPosition": "bottom",
+  "palette": [
+    "#0f766e",
+    "#2563eb",
+    "#d97706",
+    "#9333ea"
+  ],
+  "data": [
+    {
+      "label": "Jan",
+      "value": 35
+    },
+    {
+      "label": "Feb",
+      "value": 65
+    },
+    {
+      "label": "Mar",
+      "value": 50
+    },
+    {
+      "label": "Apr",
+      "value": 80
+    }
+  ]
+});
+
+      SWY.initLineChart({
+  "container": "#variation-area",
+  "xAxis": "Month",
+  "yAxis": "Visits",
+  "variant": "area",
+  "lineColor": "#0f766e",
+  "fillOpacity": 0.25,
+  "showPoints": false,
+  "animate": false,
+  "data": [
+    {
+      "xLabel": "Jan",
+      "yValue": 35
+    },
+    {
+      "xLabel": "Feb",
+      "yValue": 65
+    },
+    {
+      "xLabel": "Mar",
+      "yValue": 50
+    },
+    {
+      "xLabel": "Apr",
+      "yValue": 80
+    }
+  ]
+});
+
+      SWY.initLineChart({
+  "container": "#variation-smooth",
+  "xAxis": "Month",
+  "yAxis": "Visits",
+  "curve": "smooth",
+  "lineColor": "#7c3aed",
+  "lineWidth": 4,
+  "pointSize": 12,
+  "palette": [
+    "#7c3aed"
+  ],
+  "data": [
+    {
+      "xLabel": "Jan",
+      "yValue": 35
+    },
+    {
+      "xLabel": "Feb",
+      "yValue": 65
+    },
+    {
+      "xLabel": "Mar",
+      "yValue": 50
+    },
+    {
+      "xLabel": "Apr",
+      "yValue": 80
+    }
+  ]
+});
+
+      SWY.initLineChart({
+  "container": "#variation-step",
+  "xAxis": "Month",
+  "yAxis": "Visits",
+  "curve": "step",
+  "lineColor": "#d97706",
+  "lineWidth": 3,
+  "pointSize": 8,
+  "palette": [
+    "#d97706"
+  ],
+  "data": [
+    {
+      "xLabel": "Jan",
+      "yValue": 35
+    },
+    {
+      "xLabel": "Feb",
+      "yValue": 65
+    },
+    {
+      "xLabel": "Mar",
+      "yValue": 50
+    },
+    {
+      "xLabel": "Apr",
+      "yValue": 80
+    }
+  ]
+});
 
       // Enable debug mode for development (uncomment to see console logs)
       // SWY.setDebugMode(true);

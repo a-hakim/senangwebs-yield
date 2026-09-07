@@ -3,6 +3,7 @@
 A lightweight, dependency-free JavaScript library for creating beautiful data visualizations using HTML, CSS, and SVG. Define charts with custom HTML attributes or use the JavaScript API. Perfect for developers who need quick, professional-looking charts without the overhead of large charting libraries.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
+[![CI](https://github.com/a-hakim/senangwebs-yield/actions/workflows/ci.yml/badge.svg)](https://github.com/a-hakim/senangwebs-yield/actions/workflows/ci.yml)
 
 ![SenangWebs Yield Preview](https://raw.githubusercontent.com/a-hakim/senangwebs-yield/master/swy_preview.png)
 
@@ -14,11 +15,13 @@ SenangWebs Yield [Demo](https://dev.use.senangwebs.com/maker/senangwebs-yield).
 - **Modern Rendering** - Uses HTML, CSS, and SVG instead of Canvas for better versatility and responsive design
 - **Declarative** - HTML-first approach with `data-swy` attributes
 - **Flexible** - JavaScript API for dynamic use cases
-- **Chart Types** - Bar Chart, Pie Chart, Line Chart
+- **Chart Types** - Vertical/horizontal bars, pie/doughnut charts, and line/area charts with linear, smooth, or stepped curves
 - **Customizable** - Easy to style with CSS, no coding knowledge required
-- **Accessible** - Semantic HTML elements for better accessibility
+- **Accessible** - Charts expose `role="img"` with an accessible name, plus a visually hidden data summary for screen readers
+- **Data Safety** - Unparseable values and invalid colors are skipped/rejected with console warnings instead of silently corrupting the chart
+- **Fail Visibly** - If a chart cannot render, a clear error message appears in place instead of an empty container
 - **Auto-initialization** - Charts initialize automatically from HTML markup on page load
-- **Responsive Updates** - Existing charts re-render after a debounced window resize
+- **Responsive Updates** - Existing charts re-render after a debounced container resize (ResizeObserver, with window-resize fallback)
 
 ## Installation
 
@@ -35,7 +38,7 @@ npm install senangwebs-yield
 ```
 
 ### Manual Download
-Download `swy.min.css` and `swy.min.js` from the [releases page](https://github.com/senangwebs/senangwebs-yield/releases) and include them in your HTML:
+Download `swy.min.css` and `swy.min.js` from the [releases page](https://github.com/a-hakim/senangwebs-yield/releases) and include them in your HTML:
 ```html
 <link rel="stylesheet" href="path/to/swy.min.css">
 <script src="path/to/swy.min.js"></script>
@@ -234,8 +237,82 @@ Display data trends over time or categories.
 
 ## Customization
 
+### Chart variations and options
+
+Use the existing `SWY.initBarChart`, `SWY.initPieChart`, and `SWY.initLineChart` methods. Pass presentation options at the top level alongside `data`. HTML uses the corresponding kebab-case attribute on the element with `data-swy-type`; chart types and data-point formats are unchanged.
+
+| Chart | JavaScript option | HTML attribute | Values / default |
+|---|---|---|---|
+| All | `palette` | `data-swy-palette` | Nonempty color array; existing eight-color palette by default |
+| All | `animate` | `data-swy-animate` | Boolean; `true` |
+| Bar | `orientation` | `data-swy-orientation` | `vertical` (default), `horizontal` |
+| Bar | `barGap` | `data-swy-bar-gap` | Nonnegative pixels; 20 (15 at mobile widths when default) |
+| Bar | `barRadius` | `data-swy-bar-radius` | Nonnegative pixels; 0; rounds the value end of each bar |
+| Bar | `showValues` | `data-swy-show-values` | Boolean; `true`; category labels remain visible |
+| Pie | `variant` | `data-swy-variant` | `pie` (default), `doughnut` |
+| Pie | `holeSize` | `data-swy-hole-size` | 10?90 percent of diameter; 60; doughnut only |
+| Pie | `centerText` | `data-swy-center-text` | Plain text; empty; doughnut only |
+| Pie | `showLabels` | `data-swy-show-labels` | Boolean; `true`; slice percentages |
+| Pie | `showLegend` | `data-swy-show-legend` | Boolean; `true` |
+| Pie | `legendPosition` | `data-swy-legend-position` | `right` (default), `bottom`; stacks on mobile |
+| Line | `variant` | `data-swy-variant` | `line` (default), `area` |
+| Line | `curve` | `data-swy-curve` | `linear` (default), `smooth`, `step` |
+| Line | `lineColor` | `data-swy-line-color` | CSS color; `#2a22a2`; also colors the area fill |
+| Line | `lineWidth` | `data-swy-line-width` | Positive pixels; 3 |
+| Line | `showPoints` | `data-swy-show-points` | Boolean; `true`; hiding markers also hides their hover tooltips |
+| Line | `pointSize` | `data-swy-point-size` | Positive pixels; 10 |
+| Line | `fillOpacity` | `data-swy-fill-opacity` | 0?1; 0.2; area only |
+
+HTML booleans require the literal strings `"true"` or `"false"`. HTML palettes use JSON arrays, including for colors with commas:
+
+```html
+<div data-swy style="height: 360px">
+  <div data-swy-type="bar-chart" data-swy-orientation="horizontal"
+       data-swy-bar-radius="6" data-swy-bar-gap="12" data-swy-animate="false"
+       data-swy-palette='["rgb(15, 118, 110)", "#2563eb"]'>
+    <div data-swy-x-label="Jan" data-swy-y-value="35"></div>
+    <div data-swy-x-label="Feb" data-swy-y-value="65"></div>
+  </div>
+</div>
+```
+
+Equivalent JavaScript (using an empty container):
+
+```javascript
+SWY.initBarChart({
+  container: '#horizontal-bars',
+  orientation: 'horizontal', barRadius: 6, barGap: 12, animate: false,
+  palette: ['rgb(15, 118, 110)', '#2563eb'],
+  data: [{ xLabel: 'Jan', yValue: 35 }, { xLabel: 'Feb', yValue: 65 }]
+});
+
+SWY.initPieChart({
+  container: '#doughnut',
+  variant: 'doughnut', holeSize: 65, centerText: '100 visits', legendPosition: 'bottom',
+  data: [{ label: 'Jan', value: 35 }, { label: 'Feb', value: 65 }]
+});
+
+SWY.initLineChart({
+  container: '#area',
+  variant: 'area', curve: 'smooth', lineColor: '#0f766e',
+  lineWidth: 4, showPoints: false, fillOpacity: 0.25,
+  data: [{ xLabel: 'Jan', yValue: 35 }, { xLabel: 'Feb', yValue: 65 }, { xLabel: 'Mar', yValue: 50 }]
+});
+```
+
+- Palettes cycle over bars, slices, and line markers. Valid per-item colors override the palette; line stroke and area fill use `lineColor` independently.
+- Invalid optional settings produce a warning and fall back to defaults. Numbers must be finite, and JavaScript booleans must be actual booleans. An invalid palette falls back as a whole. Invalid chart data retains the existing validation behavior.
+- Horizontal charts retain `xLabel` / `yValue` data and `xAxis` / `yAxis` category/value titles; titles move with their visual axes.
+- Smooth curves use monotone interpolation without overshoot. Stepped curves hold the previous value until the next category. Area fills close to zero; single-point charts retain a short reference segment.
+- Doughnut centers are transparent, so the container background remains visible. Center text is rendered as text, never HTML, and is clipped to the hole when too long. Percentage labels use visible slice midpoints and are hidden if they cannot fit inside a small disc or thin ring. The legend and accessible summary retain the data.
+- Explicit pie totals still control percentages, and overflow is clamped. Any unused portion of an explicit total is transparent.
+- `animate: false` disables chart animations and transitions. All charts also respect `prefers-reduced-motion: reduce`.
+- Options persist through container resize and `SWY.reinitialize()`. Reinitialize rerenders saved options; call an initializer again to replace a configuration.
+
+See [the examples page](examples/index.html) for paired, runnable HTML and JavaScript examples of every variation, with expandable source snippets.
+
 ### Default Colors
-If no `color` is specified, charts use a predefined color palette:
+All chart types use the same predefined color palette when no `color` is specified:
 - `#ff6600` - Orange
 - `#2a22a2` - Blue
 - `#33cc33` - Green
@@ -244,6 +321,8 @@ If no `color` is specified, charts use a predefined color palette:
 - `#c70039` - Crimson
 - `#900c3f` - Purple
 - `#FF69B4` - Hot Pink
+
+Colors accept hex (`#f60`, `#ff6600`, `#ff6600ff`), `rgb()`/`rgba()`, `hsl()`/`hsla()`, and CSS keyword formats. Invalid color strings are rejected with a console warning and the palette default is used instead.
 
 ### CSS Customization
 Since charts are rendered with HTML and CSS, you can easily customize their appearance:
@@ -284,7 +363,7 @@ Since charts are rendered with HTML and CSS, you can easily customize their appe
 ```
 
 ### Responsive Design
-Charts automatically resize to fit their container. Window resize events are debounced by 150ms, then existing HTML and JavaScript API charts re-render in place.
+Charts automatically resize to fit their container. A `ResizeObserver` watches each chart's container and re-renders it in place (debounced by 150 ms) when its size changes - including container-driven changes such as sidebar toggles, tab panels, and flex/grid reflow. Browsers without `ResizeObserver` fall back to a debounced window resize listener.
 
 ```css
 /* Make chart containers responsive */
@@ -301,6 +380,8 @@ Charts automatically resize to fit their container. Window resize events are deb
     }
 }
 ```
+
+> **Minimum container sizes:** to render fully, give chart containers at least ~300px of height and width (bar charts need ~250px of vertical space, line charts ~280px, and the pie is a 300px circle that scales down fluidly with its container where `aspect-ratio` is supported).
 
 ## API Reference
 
@@ -399,31 +480,53 @@ Re-render all registered charts and initialize any new declarative charts added 
 SWY.reinitialize();
 ```
 
+#### `SWY.destroy()`
+Tear down the library: clear the chart registry, disconnect resize observers, and reset internal state. Useful for SPA unmounts and test cleanup. After calling `destroy()`, charts can be re-initialized normally.
+
+**Returns:** `void`
+
+**Example:**
+```javascript
+SWY.destroy();
+```
+
 #### `SWY.getVersion()`
 Get the current library version.
 
-**Returns:** `string` - Version number (e.g., "1.0.2")
+**Returns:** `string` - Version number (e.g., "1.1.0")
 
 **Example:**
 ```javascript
 console.log('SWY Version:', SWY.getVersion());
 ```
 
+## Data Validation
+
+SWY validates its input and fails loudly rather than silently:
+
+- **Invalid numeric values** - a `data-swy-y-value` / `data-swy-value` that is missing or not a number causes that data item to be **skipped**, with a console warning naming the offending item.
+- **Negative values** are rejected for all chart types (pie already required non-negative values).
+- **Pie totals** - when an explicit `data-swy-total` differs from the sum of the slice values, a warning is logged and percentages are calculated against the provided total; gradient stops are clamped so overflowing slices can't corrupt the render.
+- **Render failures** produce a visible error message in place of the chart (plus `console.error`), never a silently emptied container.
+
 ## Browser Support
 
-SWY works on all modern browsers that support HTML5, CSS3, and SVG:
+SWY works on all modern browsers that support HTML5, CSS3, and SVG. Note that **pie charts use CSS `conic-gradient`**, which sets the effective minimum versions:
 
 | Browser | Version |
 |---------|---------|
-| Chrome  | 60+     |
-| Firefox | 55+     |
-| Safari  | 11+     |
+| Chrome  | 69+     |
+| Firefox | 83+     |
+| Safari  | 12.1+   |
 | Edge    | 79+     |
-| Opera   | 47+     |
-| Mobile Safari | iOS 11+ |
-| Chrome Mobile | Android 5+ |
+| Opera   | 56+     |
+| Mobile Safari | iOS 12.2+ |
+| Chrome Mobile | Android 69+ |
 
-**Note:** The library uses modern JavaScript features (ES6+) and CSS Flexbox/Grid. For older browser support, consider using transpilers and polyfills.
+**Note:** Bar and line charts render with basic HTML/CSS/SVG and work on older browsers; only the pie chart requires the versions above. There is no IE support. Doughnut charts additionally require CSS radial-gradient masking (standard or WebKit-prefixed); ordinary pies do not use masks.
+
+### Accessibility Notes
+Each chart renders an accessible name (`role="img"` + `aria-label`, e.g. "Bar chart: Revenue by Quarters") and a visually hidden list of its data for screen readers. Known limitation: hover tooltips (line chart points) are not keyboard/touch accessible - the data summary serves as the accessible alternative.
 
 ## Development
 
@@ -441,6 +544,19 @@ Start the development server with hot reload:
 npm run dev
 ```
 This will open the examples page at `http://localhost:8080`.
+
+### Test
+Run the test suite (Vitest + jsdom):
+```bash
+npm test
+```
+
+Watch mode for tests:
+```bash
+npm run test:watch
+```
+
+CI runs lint, tests, and build on Node 18/20/22 via GitHub Actions (`.github/workflows/ci.yml`).
 
 ### Build
 Build the production-ready files:
@@ -498,9 +614,9 @@ senangwebs-yield/
 │       ├── logger.js       # Logging utilities
 │       ├── parser.js       # HTML attribute parser
 │       └── validator.js    # Input validation
+├── tests/                  # Vitest test suite
 ├── dist/                   # Built files (generated)
 ├── examples/               # Example HTML files
-├── docs/                   # Documentation
 └── webpack.config.js       # Build configuration
 ```
 
@@ -517,10 +633,10 @@ SenangWebs Yield is perfect for:
 
 ## Performance
 
-- **Small Bundle Size** - About 32KB minified (JS + CSS combined)
+- **Small Bundle Size** - About 27KB minified (JS + CSS combined)
 - **Fast Rendering** - HTML/CSS rendering is faster than Canvas for simple charts
 - **Zero Dependencies** - No jQuery, React, or other frameworks required
-- **Efficient Updates** - Resize-driven re-renders are debounced and reuse registered chart instances
+- **Efficient Updates** - Only the charts whose containers actually changed size are re-rendered (debounced, via ResizeObserver)
 - **Mobile Optimized** - Smooth performance on mobile devices
 
 ## Examples
@@ -543,6 +659,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ### Guidelines
 1. Follow the existing code style (ESLint + Prettier)
 2. Add examples for new features
-3. Update documentation as needed
-4. Test on multiple browsers
-5. Keep the library lightweight and dependency-free
+3. Add or update tests (`npm test`) - CI enforces lint, tests, and build
+4. Update documentation as needed
+5. Test on multiple browsers
+6. Keep the library lightweight and dependency-free

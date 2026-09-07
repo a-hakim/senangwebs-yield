@@ -1,4 +1,6 @@
 const path = require('path');
+const webpack = require('webpack');
+const pkg = require('./package.json');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
@@ -21,19 +23,9 @@ module.exports = (env, argv) => {
       sourceMapFilename: '[file].map',
     },
     mode: isDevelopment ? 'development' : 'production',
-    devtool: isDevelopment ? 'source-map' : 'source-map',
+    devtool: 'source-map',
     module: {
       rules: [
-        {
-          test: /\.js$/,
-          exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              presets: ['@babel/preset-env'],
-            },
-          },
-        },
         {
           test: /\.css$/,
           use: [MiniCssExtractPlugin.loader, 'css-loader'],
@@ -41,6 +33,9 @@ module.exports = (env, argv) => {
       ],
     },
     plugins: [
+      new webpack.DefinePlugin({
+        __SWY_VERSION__: JSON.stringify(pkg.version),
+      }),
       new MiniCssExtractPlugin({
         filename: isDevelopment ? '[name].css' : '[name].min.css',
       }),
@@ -50,8 +45,10 @@ module.exports = (env, argv) => {
       minimizer: [
         new TerserPlugin({
           terserOptions: {
+            // Keep console output: logger.error/warn are the only production
+            // diagnostics when a chart fails to render
             compress: {
-              drop_console: !isDevelopment,
+              passes: 2,
             },
             format: {
               comments: false,

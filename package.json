@@ -1,9 +1,24 @@
 {
   "name": "senangwebs-yield",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A lightweight, dependency-free JavaScript library for creating simple data visualizations (bar, pie, and line charts) using custom HTML attributes or a JavaScript API.",
   "main": "dist/swy.min.js",
   "unpkg": "dist/swy.min.js",
+  "exports": {
+    ".": "./dist/swy.min.js",
+    "./dist/swy.min.css": "./dist/swy.min.css"
+  },
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "dev": "webpack serve --mode development --open",
     "build": "webpack --mode production",
@@ -11,8 +26,9 @@
     "watch": "webpack --mode development --watch",
     "lint": "eslint src/**/*.js",
     "lint:fix": "eslint src/**/*.js --fix",
-    "format": "prettier --write \"src/**/*.js\" \"examples/**/*.html\" \"docs/**/*.md\"",
-    "test": "echo \"Test suite coming soon\"",
+    "format": "prettier --write \"src/**/*.js\" \"examples/**/*.html\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "serve": "http-server examples -p 8080 -c-1"
   },
   "keywords": [
@@ -30,18 +46,20 @@
   "author": "a-hakim",
   "license": "MIT",
   "devDependencies": {
-    "@babel/core": "^7.22.0",
-    "@babel/preset-env": "^7.22.0",
-    "babel-loader": "^9.1.2",
     "css-loader": "^6.8.1",
     "eslint": "^8.44.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",
+    "jsdom": "^29.1.1",
     "mini-css-extract-plugin": "^2.7.6",
     "prettier": "^3.0.0",
     "terser-webpack-plugin": "^5.3.9",
+    "vitest": "^4.1.11",
     "webpack": "^5.88.0",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^4.15.1"
+    "webpack-dev-server": "^5.2.6"
+  },
+  "overrides": {
+    "qs": "^6.16.0"
   }
 }

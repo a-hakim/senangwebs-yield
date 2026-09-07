@@ -5,6 +5,13 @@
 
 import logger from './logger.js';
 
+// Safe CSS color patterns: hex (3/4/6/8 digits), rgb()/rgba()/hsl()/hsla() functional
+// notation, or a plain CSS keyword/identifier. Anything else (url(), quotes,
+// semicolons, parentheses imbalance, etc.) is rejected to prevent CSS injection.
+const HEX_COLOR_REGEX = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
+const FUNCTIONAL_COLOR_REGEX = /^(?:rgba?|hsla?)\(\s*[-0-9.,%\s]+\)$/i;
+const KEYWORD_COLOR_REGEX = /^[a-zA-Z]+$/;
+
 const Validator = {
   /**
    * Validate bar chart configuration
@@ -29,8 +36,12 @@ const Validator = {
         logger.error(`Bar chart data[${i}]: xLabel is required`);
         return false;
       }
-      if (typeof point.yValue !== 'number') {
-        logger.error(`Bar chart data[${i}]: yValue must be a number`);
+      if (typeof point.yValue !== 'number' || !Number.isFinite(point.yValue)) {
+        logger.error(`Bar chart data[${i}]: yValue must be a finite number`);
+        return false;
+      }
+      if (point.yValue < 0) {
+        logger.error(`Bar chart data[${i}]: yValue must be non-negative`);
         return false;
       }
     }
@@ -54,8 +65,8 @@ const Validator = {
       return false;
     }
 
-    if (!config.total || config.total <= 0) {
-      logger.error('Pie chart requires a positive total value');
+    if (!config.total || config.total <= 0 || !Number.isFinite(config.total)) {
+      logger.error('Pie chart requires a positive, finite total value');
       return false;
     }
 
@@ -66,8 +77,8 @@ const Validator = {
         logger.error(`Pie chart data[${i}]: label is required`);
         return false;
       }
-      if (typeof point.value !== 'number' || point.value < 0) {
-        logger.error(`Pie chart data[${i}]: value must be a non-negative number`);
+      if (typeof point.value !== 'number' || !Number.isFinite(point.value) || point.value < 0) {
+        logger.error(`Pie chart data[${i}]: value must be a non-negative finite number`);
         return false;
       }
     }
@@ -98,8 +109,12 @@ const Validator = {
         logger.error(`Line chart data[${i}]: xLabel is required`);
         return false;
       }
-      if (typeof point.yValue !== 'number') {
-        logger.error(`Line chart data[${i}]: yValue must be a number`);
+      if (typeof point.yValue !== 'number' || !Number.isFinite(point.yValue)) {
+        logger.error(`Line chart data[${i}]: yValue must be a finite number`);
+        return false;
+      }
+      if (point.yValue < 0) {
+        logger.error(`Line chart data[${i}]: yValue must be non-negative`);
         return false;
       }
     }
@@ -108,31 +123,46 @@ const Validator = {
   },
 
   /**
-   * Validate color format (hex or named color)
+   * Validate color format (hex, rgb()/rgba(), hsl()/hsla() or keyword)
+   * Rejects anything that could inject additional CSS (e.g. "red); background:url(...)")
    * @param {string} color - Color string
    * @returns {boolean}
    */
   isValidColor(color) {
     if (!color) return true; // Color is optional
 
-    // Check for hex color
-    const hexRegex = /^#[0-9A-Fa-f]{3}([0-9A-Fa-f]{3})?$/;
-    if (hexRegex.test(color)) {
+    const value = String(color).trim();
+    if (value === '') return true;
+
+    if (HEX_COLOR_REGEX.test(value)) {
       return true;
     }
 
-    // Check for named color (basic check)
-    const namedColors = ['red', 'green', 'blue', 'black', 'white', 'yellow', 'orange', 'purple', 'pink'];
-    if (namedColors.includes(color.toLowerCase())) {
+    if (FUNCTIONAL_COLOR_REGEX.test(value)) {
       return true;
     }
 
-    // Check for rgb/rgba
-    if (color.startsWith('rgb')) {
+    // Plain keywords are safe: CSS ignores unknown identifiers
+    if (KEYWORD_COLOR_REGEX.test(value)) {
       return true;
     }
 
     return false;
+  },
+
+  /**
+   * Resolve a color to a safe value, falling back when invalid
+   * @param {string} color - Requested color string
+   * @param {string} fallback - Color to use when the requested color is invalid
+   * @param {string} [context=''] - Optional context for the warning message
+   * @returns {string}
+   */
+  resolveColor(color, fallback, context = '') {
+    if (color && !Validator.isValidColor(color)) {
+      logger.warn(`Invalid color ignored${context ? ` (${context})` : ''}: ${color}`);
+      return fallback;
+    }
+    return color || fallback;
   },
 
   /**

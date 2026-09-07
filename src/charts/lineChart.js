@@ -6,11 +6,16 @@
 import DOM from '../utils/dom.js';
 import Validator from '../utils/validator.js';
 import logger from '../utils/logger.js';
+import linePath from '../utils/lineGeometry.js';
+import { normalizeOptions, paletteColor, applyAnimation } from '../utils/options.js';
+
+// Maximum x-axis labels rendered before thinning kicks in
+const MAX_X_LABELS = 12;
 
 class LineChart {
   constructor(element, config) {
     this.element = element;
-    this.config = config;
+    this.config = config ? { ...config, ...normalizeOptions('line-chart', config) } : config;
     this.container = null;
   }
 
@@ -21,6 +26,7 @@ class LineChart {
     // Validate configuration
     if (!Validator.validateLineChart(this.config)) {
       logger.error('Invalid line chart configuration');
+      this.renderError();
       return false;
     }
 
@@ -37,6 +43,8 @@ class LineChart {
       // Create main chart container
       this.container = DOM.create('div', {}, 'swy-chart-container');
       DOM.addClass(this.container, 'swy-line-chart');
+      applyAnimation(this.container, this.config);
+      if (this.config.variant === 'area') this.container.classList.add('swy-area-chart');
 
       // Create chart area
       const chartArea = DOM.create('div', {}, 'swy-line-chart-area');
@@ -57,7 +65,7 @@ class LineChart {
       const dataArea = DOM.create('div', {}, 'swy-line-data-area');
 
       // Draw lines and points
-      LineChart.drawLineAndPoints(dataArea, data, scale);
+      LineChart.drawLineAndPoints(dataArea, data, scale, this.config);
 
       DOM.append(chartArea, dataArea);
       DOM.append(this.container, chartArea);
@@ -66,6 +74,13 @@ class LineChart {
       const axisLabels = this.createAxisLabels();
       DOM.append(this.container, axisLabels);
 
+      // Accessible summary (visually hidden)
+      const summary = DOM.createAccessibleSummary(
+        `${this.config.variant === 'area' ? 'Area' : 'Line'} chart${this.config.curve === 'linear' ? '' : ` (${this.config.curve})`}: ${this.config.yAxis || 'Y-Axis'} by ${this.config.xAxis || 'X-Axis'}`,
+        data.map((point) => `${point.xLabel || ''}: ${DOM.formatNumber(point.yValue)}`),
+      );
+      DOM.append(this.container, summary);
+
       // Append to element
       DOM.append(this.element, this.container);
 
@@ -73,8 +88,21 @@ class LineChart {
       return true;
     } catch (error) {
       logger.error('Failed to render line chart', error);
+      this.renderError();
       return false;
     }
+  }
+
+  /**
+   * Show a visible fallback message in place of the chart
+   * @private
+   */
+  renderError() {
+    if (!this.element || this.element.querySelector('.swy-render-error')) {
+      return;
+    }
+    DOM.clear(this.element);
+    DOM.append(this.element, DOM.createErrorMessage('SWY: chart could not be rendered. Check the console for details.'));
   }
 
   /**
@@ -125,13 +153,16 @@ class LineChart {
     }
     DOM.append(axesContainer, yAxisLabels);
 
-    // X-axis labels
+    // X-axis labels, thinned when there are too many to display legibly
     const xAxisLabels = DOM.create('div', {}, 'swy-x-axis-labels');
+    const labelStep = data.length > MAX_X_LABELS ? Math.ceil(data.length / MAX_X_LABELS) : 1;
     data.forEach((point, index) => {
+      const labelText = point.xLabel || `X${index}`;
       const label = DOM.create(
         'div',
         {
-          textContent: point.xLabel || `X${index}`,
+          textContent: index % labelStep === 0 || index === data.length - 1 ? labelText : '',
+          title: labelText,
         },
         'swy-x-axis-label',
       );
@@ -147,7 +178,8 @@ class LineChart {
    * Draw line and data points
    * @private
    */
-  static drawLineAndPoints(container, data, scale) {
+  static drawLineAndPoints(container, data, scale, options = {}) {
+    const config = normalizeOptions('line-chart', options);
     // Calculate point positions
     const points = data.map((point, index) => {
       const xPercent = (index / (data.length - 1 || 1)) * 100;
@@ -172,27 +204,58 @@ class LineChart {
     svg.setAttribute('preserveAspectRatio', 'none');
     svg.setAttribute('viewBox', '0 0 100 100');
 
-    // Create polyline path
-    const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-    const pointsStr = points.map((p) => `${p.x},${100 - p.y}`).join(' ');
-    polyline.setAttribute('points', pointsStr);
-    polyline.setAttribute('fill', 'none');
-    polyline.setAttribute('stroke', '#2a22a2');
-    polyline.setAttribute('stroke-width', '0.5');
-    polyline.setAttribute('stroke-linecap', 'round');
-    polyline.setAttribute('stroke-linejoin', 'round');
-    polyline.setAttribute('vector-effect', 'non-scaling-stroke');
-    polyline.classList.add('swy-line-path');
-    polyline.classList.add('swy-line-animate');
+    const coordinates = points.map((point) => ({ x: point.x, y: 100 - point.y }));
+    // Give a singleton a short reference segment, including when points are hidden.
+    if (coordinates.length === 1) {
+      coordinates.push({ x: Math.min(coordinates[0].x + 10, 100), y: coordinates[0].y });
+    }
+    const pathData = linePath(coordinates, config.curve);
+    if (config.variant === 'area') {
+      const fill = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      const last = coordinates[coordinates.length - 1];
+      fill.setAttribute('d', `${pathData} L ${last.x} 100 L ${coordinates[0].x} 100 Z`);
+      fill.setAttribute('class', 'swy-area-fill swy-line-animate');
+      fill.style.fill = config.lineColor;
+      fill.style.fillOpacity = config.fillOpacity;
+      svg.appendChild(fill);
+    }
 
-    svg.appendChild(polyline);
+    // Keep the existing polyline hook for the default straight-line rendering.
+    const tag = points.length === 1 ? 'line' : 'polyline';
+    const stroke = document.createElementNS('http://www.w3.org/2000/svg', config.curve === 'linear' ? tag : 'path');
+    if (config.curve !== 'linear') {
+      stroke.setAttribute('d', pathData);
+    } else if (points.length === 1) {
+      stroke.setAttribute('x1', coordinates[0].x);
+      stroke.setAttribute('y1', coordinates[0].y);
+      stroke.setAttribute('x2', coordinates[1].x);
+      stroke.setAttribute('y2', coordinates[1].y);
+    } else {
+      stroke.setAttribute('points', coordinates.map((point) => `${point.x},${point.y}`).join(' '));
+    }
+    stroke.setAttribute('fill', 'none');
+    stroke.setAttribute('vector-effect', 'non-scaling-stroke');
+    stroke.setAttribute('class', 'swy-line-path swy-line-animate');
+    if (config.lineColor !== '#2a22a2') stroke.style.stroke = config.lineColor;
+    if (config.lineWidth !== 3) stroke.style.strokeWidth = `${config.lineWidth}px`;
+    svg.appendChild(stroke);
+
     container.appendChild(svg);
 
     // Draw data points
+    if (!config.showPoints) return;
     points.forEach((point) => {
-      const color = point.data.color || LineChart.getDefaultPointColor(point.index);
+      const color = Validator.resolveColor(
+        point.data.color,
+        paletteColor(config, point.index),
+        `line chart data[${point.index}] "${point.data.xLabel || ''}"`,
+      );
 
       const pointEl = DOM.create('div', {}, 'swy-line-point');
+      if (config.pointSize !== 10) {
+        pointEl.style.width = `${config.pointSize}px`;
+        pointEl.style.height = `${config.pointSize}px`;
+      }
       pointEl.style.left = `${point.x}%`;
       pointEl.style.bottom = `${point.y}%`;
       pointEl.style.backgroundColor = color;
@@ -258,8 +321,7 @@ class LineChart {
    * @private
    */
   static getDefaultPointColor(index) {
-    const colors = ['#ff6600', '#2a22a2', '#33cc33', '#ddd222', '#ff5733', '#c70039', '#900c3f', '#FF69B4'];
-    return colors[index % colors.length];
+    return paletteColor({}, index);
   }
 }
 

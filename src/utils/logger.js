@@ -21,7 +21,11 @@ class Logger {
   }
 
   error(message, error = null) {
-    console.error(`${this.prefix} ERROR: ${message}`, error || '');
+    if (error) {
+      console.error(`${this.prefix} ERROR: ${message}`, error);
+    } else {
+      console.error(`${this.prefix} ERROR: ${message}`);
+    }
   }
 
   warn(message) {
@@ -36,7 +40,11 @@ class Logger {
 
   debug(message, data = null) {
     if (this.debugMode) {
-      console.log(`${this.prefix} DEBUG: ${message}`, data || '');
+      if (data) {
+        console.log(`${this.prefix} DEBUG: ${message}`, data);
+      } else {
+        console.log(`${this.prefix} DEBUG: ${message}`);
+      }
     }
   }
 }
