@@ -1,7 +1,7 @@
 ---
 name: senangwebs-yield
 description: Zero-dependency data visualization library for bar, pie, and line charts using HTML/CSS/SVG with declarative data attributes.
-version: 1.1.0
+version: 1.0.3
 package: senangwebs-yield
 ---
 
